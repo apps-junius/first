@@ -22,7 +22,6 @@ main :: IO ()
 main = do
   let json = Person "Alice" 30 True (Just "Wonderland")
   let jsonString = encode json
-  putStrLn "============"
 
   putStrLn $ "JSON String: " ++ show jsonString
   let decodedJson = decode jsonString :: Maybe Person
