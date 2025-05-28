@@ -3,7 +3,14 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/topics/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: aeson-2.2.1.0@sha256:351b1eed10bee43321957408f20460d595fafbf37266e6c13abd9bd5acbd1025,6578
+    pantry-tree:
+      sha256: e907bbb78d05b94ddb16cddbc379e79e920781450a8a0465f014b693608731de
+      size: 83518
+  original:
+    hackage: aeson-2.2.1.0
 snapshots:
 - completed:
     sha256: 5e44cb81460cd2f90011ab6868958d58bde10f63babf4847a56118450b51221e

@@ -1,47 +1,31 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+-- Enables automatic derivation of Generic
+{-# LANGUAGE DeriveGeneric #-}
+-- Allows string literals to be Text or ByteString
+{-# LANGUAGE OverloadedStrings #-}
 
--- 1. Define the data type
-data Wrapper a = HasValue a | NoValue | ThirdValue deriving (Show)
+import Data.Aeson (FromJSON, ToJSON, decode, encode)
+import GHC.Generics
 
-add :: Int -> Int -> Int
-add x y = x + y
+data Person = Person
+  { name :: String,
+    age :: Int,
+    isStudent :: Bool,
+    city :: Maybe String -- Optional field
+  }
+  deriving (Show, Generic) -- Add Generic
 
-mySubtract :: Int -> Int -> Int
-mySubtract x y =
-  if x > y
-    then
-      x - y
-    else
-      y - x
+instance ToJSON Person
+
+instance FromJSON Person
 
 main :: IO ()
 main = do
-  let a :: Char = 'a'
-  let b :: Int = 5
-  let c :: Bool = True
-  let d :: Float = 3.14
-  let e :: String = "Hello, World!"
-  let f :: Integer = 42 -- arbitrary integer type
-  let g :: Double = 2.71828
-  let h :: () = ()
-  print a
-  print b
-  print c
-  print d
-  print e
-  print f
-  print g
-  print h
+  let json = Person "Alice" 30 True (Just "Wonderland")
+  let jsonString = encode json
+  putStrLn "============"
 
-  let l :: [Int] = [1, 2, 3, 4, 5]
-  let t :: (Int, String) = (42, "Hello")
-  print l
-  print t
-
-  print (add 1 1)
-  print (mySubtract 1 1)
-
-  case b of
-    1 -> putStrLn "b is one"
-    2 -> putStrLn "b is two"
-    _ -> putStrLn "b is something else"
+  putStrLn $ "JSON String: " ++ show jsonString
+  let decodedJson = decode jsonString :: Maybe Person
+  case decodedJson of
+    Just person -> putStrLn $ "Decoded Person: " ++ show person
+    Nothing -> putStrLn "Failed to decode JSON"
