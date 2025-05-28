@@ -1,30 +1,48 @@
--- Enables automatic derivation of Generic
-{-# LANGUAGE DeriveGeneric #-}
--- Allows string literals to be Text or ByteString
-{-# LANGUAGE OverloadedStrings #-}
+-- define different functions
+myAdd :: Int -> Int -> Int
+myAdd x y = x + y
 
-import Data.Aeson (FromJSON, ToJSON, decode, encode)
-import GHC.Generics
+-- a could be any type
+myTempAdd :: a -> Int -> Int
+myTempAdd x y = y
 
-data Person = Person
-  { name :: String,
-    age :: Int,
-    isStudent :: Bool,
-    city :: Maybe String -- Optional field
-  }
-  deriving (Show, Generic) -- Add Generic
+-- a could be tuple of any types
+myTempAdd2 :: a -> Int -> Int
+myTempAdd2 x y = y
 
-instance ToJSON Person
+-- type class definition
+class BasicEq a where
+  isEqual :: a -> a -> Bool
 
-instance FromJSON Person
+-- Bool instance
+instance BasicEq Bool where
+  isEqual True True = True
+  isEqual False False = True
+  isEqual _ _ = False
+
+-- Int instance
+instance BasicEq Int where
+  isEqual 5 y = False
+  isEqual x y = x == y
+
+data Color = Red | Green | Blue
+  deriving (Read, Show, Eq, Ord)
 
 main :: IO ()
 main = do
-  let json = Person "Alice" 30 True (Just "Wonderland")
-  let jsonString = encode json
+  -- \$ used to apply a function to an argument
+  let a = (myAdd 1) $ 2
+  print a
 
-  putStrLn $ "JSON String: " ++ show jsonString
-  let decodedJson = decode jsonString :: Maybe Person
-  case decodedJson of
-    Just person -> putStrLn $ "Decoded Person: " ++ show person
-    Nothing -> putStrLn "Failed to decode JSON"
+  let b = myTempAdd True 4
+  print b
+
+  let c = myTempAdd2 (True, "Hello") 4
+  print c
+
+  let d = isEqual True False
+  print d
+
+  let e = isEqual (5 :: Int) (5 :: Int)
+  print e
+  print Red
